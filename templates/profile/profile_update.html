@@ -1,0 +1,10 @@
+{% extends "index.html" %}
+{% block content %}
+<center style="padding: 15px;">
+    <h2>Profile Settings</h2>
+    <form method="post" enctype="multipart/form-data" style="max-width: 600px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+                </center>
+{% endblock content %}

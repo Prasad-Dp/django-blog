@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+{% block content %}
+     <!-- Page Content-->
+            <section class="py-5">
+                <div class="container px-5" >
+                    <h1 class="fw-bolder fs-5 mb-4">Blogs</h1>
+                    {% for post in posts  %}
+                    <div class="card border-0 shadow rounded-3 overflow-hidden" style="margin: 10px;">
+                        <div class="card-body p-0">
+                            <div class="row gx-0">
+                                <div class="col-lg-6 col-xl-5 py-lg-5">
+                                    <div class="p-4 p-md-5">
+                                        <div class="badge bg-primary bg-gradient rounded-pill mb-2">{{post.category}}</div>
+                                        
+                                              <div class="h2 fw-bolder">{{post.tittle}}</div>
+                                        <p>{{post.post_disc|truncatechars:150}}</p>
+                                        <a class="stretched-link text-decoration-none" href="{% url 'blog-view' post.slug %}">
+                                            Read more
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                    <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                        <div class="d-flex align-items-end justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <img class="rounded-circle me-3" src="{{post.userprofile.pfg_img.url}}" style="height: 30px; width: 30px;" alt="..." />
+                                                <div class="small">
+                                                    <div class="fw-bold"><a href="">{{post.userprofile}}</a></div>
+                                                    <div class="text-muted">{{post.time_stamp}} &middot; 6 min read</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                      
+                                </div>
+                                <div class="col-lg-6 col-xl-7"><div class="bg-featured-blog" style="background-image: url('{{post.post_img.url}}')"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </section>
+{% endblock content %}

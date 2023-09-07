@@ -1,0 +1,202 @@
+{% extends "index.html" %}
+{% block content %}
+    <section class="h-100 gradient-custom-2">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-lg-9 col-xl-7">
+        <div class="card">
+          <div class="rounded-top text-white d-flex flex-row" style="background-image:url('{{profile.pbg_img.url}}') ; height:200px;">
+            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+              <img src="{{profile.pfg_img.url}}"
+                alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                style="width: 150px; z-index: 1">
+                
+            </div>
+            
+            
+            
+            <div class="ms-3" style="margin-top: 130px;">
+              <h5>{{profile.name}}</h5>
+              <p>{{profile.location}}</p>
+            </div>
+            
+          </div>
+          <div class="p-4 text-black" style="background-color: #f8f9fa;">
+            <div class="d-flex justify-content-end text-center py-1">
+              {% if user.username == profile.user.username %}
+              <button type="submit" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+              style="margin-right: 49%; padding: 5px;">
+              Edit Profile
+              </button>
+              {% else %}
+              <form  method="post" action="/follow/" style="margin-right: 49%; padding: 5px;">
+                {% csrf_token %}
+                <input type="hidden" value="{{profile.user.username}}" name="user" >
+                <button type="submit" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                style="z-index: 1;">
+                {{button_text}}
+                </button>
+              </form>
+              {% endif %}
+              
+              <div>
+                <p class="mb-1 h5">{{posts_count}}</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal">
+                  Posts
+                </button>
+              </div>
+              <div class="px-3">
+                <p class="mb-1 h5">{{followers_count}}</p>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                  Followers
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        
+                        <ol class="list-group list-group-numbered">
+                          {% for followers in followers_list  %}
+                          <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                              <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                <div class="d-flex align-items-end justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <img class="rounded-circle me-3" src="{{followers.follower.pfg_img.url}}" style="height: 30px; width: 30px;" alt="..." />
+                                        <div class="small">
+                                            <div class="fw-bold"><a href="{% url 'profile' followers.follower.user.username %}">{{followers.follower.user.username}}</a></div>
+                                            <div class="text-muted">{{followers.follower.location}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <a class="badge bg-primary rounded-pill"></a>
+                          </li>
+                          {% endfor %}
+                        </ol>
+                        
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p class="mb-1 h5">{{following_count}}</p>
+                
+                             <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Following
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+        
+              <ol class="list-group list-group-numbered">
+                {% for followings in following_list  %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                      <div class="d-flex align-items-end justify-content-between">
+                          <div class="d-flex align-items-center">
+                              <img class="rounded-circle me-3" src="{{followings.following.pfg_img.url}}" style="height: 30px; width: 30px;" alt="..." />
+                              <div class="small">
+                                  <div class="fw-bold"><a href="{% url 'profile' followings.following.user.username %}">{{followings.following.user.username}}</a></div>
+                                  <div class="text-muted">{{followings.following.location}}</div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="badge bg-primary rounded-pill"></span>
+                </li>
+                {% endfor %}   
+
+                
+              </ol>
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+              </div>
+
+
+
+            </div>
+          </div>
+          <div class="card-body p-4 text-black">
+            <div class="mb-5">
+              <p class="lead fw-normal mb-1">About</p>
+              <div class="p-4" style="background-color: #f8f9fa;">
+                <p class="font-italic mb-1">{{profile.about|linebreaks}}</p>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="lead fw-normal mb-0">Posts</p>
+             
+            </div>
+            <div class="row gx-5">
+                        {% for post in posts %}
+                        <div class="col-lg-4 mb-5">
+                            
+                            <div class="card h-100 shadow border-0">
+                                <img class="card-img-top" src="{{post.post_img.url}}" alt="..." />
+                                <div class="card-body p-4">
+                                    <div class="badge bg-primary bg-gradient rounded-pill mb-2">{{post.category}}</div>
+                                    <a class="text-decoration-none link-dark stretched-link" href="#!"><div class="h5 card-title mb-3">{{post.tittle|truncatechars:20}}</div></a>
+                                    <p class="card-text mb-0">{{post.post_disc|truncatechars:40}}</p>
+                                     <a class="stretched-link text-decoration-none" href="{% url 'blog-view' post.slug %}">
+                                            Read more
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                </div>
+                                <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                    <div class="d-flex align-items-end justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            
+                                            <div class="small">
+                                      
+                                                <div class="text-muted">{{post.time_stamp}} </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        {% endfor %}
+                    </div>
+                    </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+

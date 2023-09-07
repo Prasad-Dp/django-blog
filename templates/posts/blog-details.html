@@ -1,0 +1,126 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+<main class="flex-shrink-0">    
+<!-- Page Content-->
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="row gx-5">
+                <div class="col-lg-3">
+                    <div class="d-flex align-items-center mt-lg-5 mb-4">
+                        <img class="img-fluid rounded-circle" src="{{post.userprofile.pfg_img.url}}" style="height: 50px; width: 50px;" alt="..." />
+                        <div class="ms-3">
+                            <div class="fw-bold"><a href="{% url 'profile' post.userprofile.user.username  %}">{{post.userprofile.user}}</a></div>
+                            <div class="text-muted">News, Business</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <!-- Post content-->
+                    <article>
+                        <!-- Post header-->
+                        <header class="mb-4">
+                            <!-- Post title-->
+                            <h1 class="fw-bolder mb-1">{{post.tittle}}</h1>
+                            <!-- Post meta content-->
+                            <div class="text-muted fst-italic mb-2">{{post.time_stamp}}</div>
+                            <!-- Post categories-->
+                            <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{post.category}}</a>
+                            <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
+                        </header>
+                        <!-- Preview image figure-->
+                        <figure class="mb-4"><img class="img-fluid rounded" src="{{post.post_img.url}}" alt="..." /></figure>
+                        <!-- Post content-->
+                        <section class="mb-5">
+                            <p class="fs-5 mb-4">{{post.post_disc}}</p>
+                            
+                        </section>
+                        <section class="mb-5">
+                        <form action="/likes/" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{post.slug}}" name="post">
+                            <button class="btn btn-primary">{{button_txt}}</button>&nbsp;&nbsp;{{likes_count}}
+                        </form>
+                            
+                        </section>
+                    </article>
+                    <!-- Comments section-->
+                    <section>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <!-- Comment form-->
+                                <form class="mb-4" action="/comment/" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{post.slug}}" name="post">
+                                    <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!" name="comment"></textarea>
+                                    <button type="submit" class="btn btn-outline-dark">Comment</button>
+                                </form>
+                                <!-- Comment with nested comments-->
+                                <div class="d-flex mb-4">
+
+                                    
+                                    <div class="ms-3">
+                                        {% for comment in comments  %}
+                                        <!-- Child comment 1-->
+                                        <div class="d-flex mt-4">
+                                           
+                                            <div class="flex-shrink-0"><img class="rounded-circle" src="{{comment.commenter.pfg_img.url}}" alt="..." style="max-width: 50px; max-height: 50px;"/></div>
+                                            <div class="ms-3">
+                                                <div class="fw-bold"><a href="{% url 'profile' comment.commenter.user.username %}">{{comment.commenter.user.username}}</a></div>
+                                                {{comment.comment}}
+                                            </div>
+                                            
+                                           
+                                        </div>
+                                        <p class="d-inline-flex gap-1">
+                                            <button class="btn btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#ok" aria-expanded="false" aria-controls="collapseExample" style="border: none;">
+                                              view replys
+                                            </button>
+                                          </p>
+                                          <div class="collapse" id="ok">
+                                            <div class="card card-body">
+                                                <ol>
+                                                
+                                                    {% for reply in replys %}
+                                                      {% if reply.comment.id == comment.id%}
+                                                      <li>
+                                                      <div class="d-flex mt-4">
+                                           
+                                                        <div class="flex-shrink-0"><img class="rounded-circle" src="{{reply.replycommenter.pfg_img.url}}" alt="..." style="max-width: 50px; max-height: 50px;"/></div>
+                                                        <div class="ms-3">
+                                                            <div class="fw-bold"><a href="{% url 'profile' reply.replycommenter.user.username %}">{{reply.replycommenter.user.username}}</a></div>
+                                                            {{reply.replycomment}}
+                                                        </div>
+                                                        
+                                                       
+                                                    </div>
+                                                </li>
+                                                      {% endif %}
+                                                    {% endfor %}
+            
+                                                </ol>
+                                              <div>
+                                                <form action="/replycomments/" method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" value="{{post.slug}}" name="post">
+                                                    <input type="hidden" value="{{comment.id}}" name="comment">
+                                                    <input type="text" name="reply">
+                                                    <button class="btn btn-outline-dark" type="submit">reply</button>
+                                                </form>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock content %}
+            
